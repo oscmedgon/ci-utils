@@ -1,0 +1,35 @@
+version: '3'
+services:
+    db:
+        image: postgres:9.4
+        restart: always
+        environment:
+            POSTGRES_DB: "sonar"
+            POSTGRES_USER: "sonar_db"
+            POSTGRES_PASSWORD: "MU35962k28gVa8nPRrQoDd57MRSNyw"
+        volumes:
+            - dbData:/var/lib/postgresql/data
+    sonar:
+        container_name: sonar
+        image: paperinik/rpi-sonarqube:latest
+        volumes:
+            - sonarqube_data:/opt/ciUtils/data
+            - sonarqube_extensions:/opt/ciUtils/extensions
+            - sonarqube_logs:/opt/ciUtils/logs
+        depends_on:
+            - db
+        links:
+            - db
+        environment:
+            DB_NAME: "sonar"
+            DB_USER: "sonar_db"
+            DB_PASS: "MU35962k28gVa8nPRrQoDd57MRSNyw"
+            DB_TYPE: "POSTGRES"
+        ports:
+            - 9000:9000
+            - 443
+volumes:
+    dbData: null
+    sonarqube_data: null
+    sonarqube_extensions: null
+    sonarqube_logs: null
